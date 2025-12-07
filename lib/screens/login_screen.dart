@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:your_project_name/components/my_button.dart';
-import 'package:your_project_name/components/my_textfield.dart';
-import 'package:your_project_name/screens/signup_screen.dart';
-import 'package:your_project_name/screens/home_screen.dart';
+import 'package:salonapp/components/my_button.dart';
+import 'package:salonapp/components/my_textfield.dart';
+import 'package:salonapp/screens/signup_screen.dart';
+import 'package:salonapp/screens/home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final usernameController = TextEditingController();

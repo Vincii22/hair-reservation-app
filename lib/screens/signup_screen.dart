@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:your_project_name/components/my_button.dart';
-import 'package:your_project_name/components/my_textfield.dart';
+import 'package:salonapp/components/my_button.dart';
+import 'package:salonapp/components/my_textfield.dart';
 
 class SignupScreen extends StatelessWidget {
   final emailController = TextEditingController();

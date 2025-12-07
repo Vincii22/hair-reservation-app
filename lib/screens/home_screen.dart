@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:your_project_name/components/stylist_card.dart';
+import 'package:salonapp/components/stylist_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
