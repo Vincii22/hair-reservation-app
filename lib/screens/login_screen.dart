@@ -13,40 +13,39 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white, // Cleaner background
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.content_cut, size: 100, color: Colors.deepPurple),
                 const SizedBox(height: 50),
+                const Icon(Icons.content_cut, size: 100, color: Colors.deepPurple),
+                const SizedBox(height: 20),
                 Text(
                   'Welcome back to StyleCut!',
-                  style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                  style: TextStyle(color: Colors.grey[700], fontSize: 18, fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(height: 25),
-                // Reusable text fields
+                const SizedBox(height: 40),
                 MyTextField(
                   controller: usernameController,
                   hintText: 'Email',
                   obscureText: false,
                   icon: Icons.email,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                   icon: Icons.lock,
                 ),
-                const SizedBox(height: 25),
-                // Reusable Button
+                const SizedBox(height: 35),
                 MyButton(
                   text: "Sign In",
                   onTap: () {
-                    // Home nav logic here
+                    // Placeholder: Navigate to Home
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                 ),
@@ -62,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(width: 4),
                       const Text(
                         'Register now',
-                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
