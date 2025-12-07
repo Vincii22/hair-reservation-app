@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "743454864200",
+    "project_id": "stylecut-reservation-app",
+    "storage_bucket": "stylecut-reservation-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743454864200:android:1b291481763e6a0504f97d",
+        "android_client_info": {
+          "package_name": "com.example.salonapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2-hP5eBeXihdkDBoactHOOs9sr-iYc-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
