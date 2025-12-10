@@ -1,3 +1,5 @@
+// lib/components/my_textfield.dart
+
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
@@ -5,6 +7,9 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final IconData icon;
+  // 💡 ADDED: Parameters needed for validation and number input
+  final TextInputType? keyboardType; 
+  final String? Function(String?)? validator; 
 
   const MyTextField({
     super.key,
@@ -12,26 +17,31 @@ class MyTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     required this.icon,
+    this.keyboardType, // 💡 Initialized
+    this.validator,    // 💡 Initialized
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
+      // 💡 CHANGED: Using TextFormField to enable the validator parameter
+      child: TextFormField( 
         controller: controller,
         obscureText: obscureText,
+        // 💡 PASSED: New parameters to the internal widget
+        keyboardType: keyboardType, 
+        validator: validator,
+        
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.grey[500]),
-          enabledBorder: OutlineInputBorder(
+          prefixIcon: Icon(icon, color: Colors.deepPurple),
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.deepPurple),
-            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade400),
           ),
-          fillColor: Colors.grey[200],
+          fillColor: Colors.grey.shade200,
           filled: true,
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[500]),

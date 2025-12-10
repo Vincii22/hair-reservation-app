@@ -1,19 +1,66 @@
+// lib/screens/login_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:salonapp/components/my_button.dart';
 import 'package:salonapp/components/my_textfield.dart';
-import 'package:salonapp/screens/signup_screen.dart';
-import 'package:salonapp/screens/home_screen.dart';
+import 'package:salonapp/services/auth_service.dart'; // Import the service
 
-class LoginScreen extends StatelessWidget {
-  final usernameController = TextEditingController();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final AuthService _authService = AuthService();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  LoginScreen({super.key});
+  bool _isLoading = false;
+  String _errorMessage = '';
+
+  Future<void> _signIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = ''; // Clear previous errors
+    });
+
+    try {
+      // Call the Firebase Auth service
+      final user = await _authService.signIn(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+
+      if (user != null) {
+        // Success: Navigate to the home screen
+        // This navigation will be properly handled by the Auth Stream in Step 6.
+        // For now, we use pushReplacementNamed to fulfill the UI flow.
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // Failure: Show error message
+        setState(() {
+          // General message for security purposes
+          _errorMessage = 'Invalid email or password.'; 
+        });
+      }
+    } catch (e) {
+      // General error handling
+      setState(() {
+        _errorMessage = 'An unexpected error occurred. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Cleaner background
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -29,7 +76,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 MyTextField(
-                  controller: usernameController,
+                  controller: emailController,
                   hintText: 'Email',
                   obscureText: false,
                   icon: Icons.email,
@@ -41,18 +88,31 @@ class LoginScreen extends StatelessWidget {
                   obscureText: true,
                   icon: Icons.lock,
                 ),
-                const SizedBox(height: 35),
-                MyButton(
-                  text: "Sign In",
-                  onTap: () {
-                    // Placeholder: Navigate to Home
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-                  },
-                ),
+                const SizedBox(height: 20),
+                
+                if (_errorMessage.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Text(
+                      _errorMessage,
+                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                const SizedBox(height: 15),
+
+                // Button/Loading Indicator
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator(color: Colors.deepPurple))
+                    : MyButton(
+                        text: "Sign In",
+                        onTap: _signIn, // Linked to the Firebase sign-in function
+                      ),
                 const SizedBox(height: 50),
+                
                 GestureDetector(
                   onTap: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
+                     Navigator.pushNamed(context, '/signup');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

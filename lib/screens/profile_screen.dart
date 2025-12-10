@@ -1,15 +1,34 @@
+// lib/screens/profile_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // 💡 NEW: Import Firebase Auth
 import 'package:salonapp/components/custom_app_bar.dart';
+import 'package:salonapp/services/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  // Placeholder User Data (to be replaced by Firestore data)
-  final String userName = "Alex Johnson";
-  final String userEmail = "alex.johnson@example.com";
+  // --- LOGOUT LOGIC METHOD ---
+  void _logout(BuildContext context) async {
+    try {
+      await AuthService().signOut();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging out: $e')),
+      );
+    }
+  }
+  // ---------------------------
 
   @override
   Widget build(BuildContext context) {
+    // 💡 Access the currently authenticated user
+    final User? user = FirebaseAuth.instance.currentUser;
+    
+    // Provide default values if user data is somehow missing
+    final String userName = user?.displayName ?? "Customer User";
+    final String userEmail = user?.email ?? "Email Not Found";
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(title: 'Profile', hasBackButton: false),
@@ -24,8 +43,17 @@ class ProfileScreen extends StatelessWidget {
               child: Icon(Icons.person, size: 70, color: Colors.white),
             ),
             const SizedBox(height: 15),
+            // 💡 Use the live user data
             Text(userName, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Text(userEmail, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            
+            // Display the User ID (useful for development)
+            const SizedBox(height: 5),
+            Text(
+              'UID: ${user?.uid ?? 'N/A'}', 
+              style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              textAlign: TextAlign.center,
+            ),
             
             const SizedBox(height: 40),
             
@@ -41,7 +69,7 @@ class ProfileScreen extends StatelessWidget {
               leading: const Icon(Icons.logout, color: Colors.red),
               title: const Text("Log Out", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
               onTap: () {
-                // Firebase Auth Logout logic here
+                _logout(context);
               },
             ),
           ],

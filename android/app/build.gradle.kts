@@ -1,10 +1,29 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+// --- START: SIGNING CONFIGURATION IN KOTLIN DSL ---
+
+// 1. Load the signing properties file
+val signingProperties = Properties()
+val signingPropertiesFile = rootProject.file("key.properties")
+
+if (signingPropertiesFile.exists()) {
+    FileInputStream(signingPropertiesFile).use { signingProperties.load(it) }
+} else {
+    println("Warning: key.properties file not found. Release build signing may fail.")
+}
+
+// 2. Define the signing configuration block using the properties
+// This block must be inside the android { ... } block in standard Flutter setup,
+// but defining it here simplifies access to the 'signingProperties' val.
+// We will move the configuration *definition* inside the android block below.
+
+// --- END: SIGNING CONFIGURATION IN KOTLIN DSL ---
+
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
     id("com.google.gms.google-services")
-    // END: FlutterFire Configuration
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -18,26 +37,36 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        jvmToolchain(17)
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.salonapp"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
+        versionCode = flutter.versionCode as Int? ?: 1
         versionName = flutter.versionName
     }
 
+    // 3. Define signingConfigs block and create the 'release' config
+    signingConfigs {
+        create("release") {
+            storeFile = file(signingProperties["storeFile"] as String)
+            storePassword = signingProperties["storePassword"] as String
+            keyAlias = signingProperties["keyAlias"] as String
+            keyPassword = signingProperties["keyPassword"] as String
+        }
+    }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+        getByName("release") {
+            // FIX: Use the created 'release' signing configuration
+            signingConfig = signingConfigs.getByName("release")
+            
+            // RECOMMENDED: Optimization for release build
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
     }
 }
